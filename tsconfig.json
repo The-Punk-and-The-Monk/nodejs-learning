@@ -5,6 +5,7 @@
         "target": "es2018",
         "module": "commonjs",
         "outDir": "dist",
+        "noImplicitAny": true,
         "sourceMap": true,
         "paths": {
             "src/*": ["./src/*"]

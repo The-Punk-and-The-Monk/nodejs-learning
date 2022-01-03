@@ -1,11 +1,8 @@
 import http from 'http';
-import {b} from 'src/test';
+import { serverHandle } from 'src/app';
 
-const server = http.createServer((req, res) => {
-    req.on('data', () => {
-        res.end('wahaha');
-    });
-});
+const PORT = 8765;
+const server = http.createServer(serverHandle);
 
-server.listen(8765);
-console.log('ok');
+server.listen(PORT);
+console.log('listen on 8765 ok');
