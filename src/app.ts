@@ -38,7 +38,7 @@ export const serverHandle: http.RequestListener = async (req, res) => {
     reqExtended.path = req.url?.split('?')[0];
     reqExtended.body = await getPostData(req);
 
-    const blogData = handleBlogRouter(req, res);
+    const blogData = await handleBlogRouter(req, res);
     if (blogData) {
         res.end(JSON.stringify(blogData));
         return;

@@ -8,18 +8,13 @@ export type BlogDetail = {
 
 export type BlogList = Array<BlogDetail>
 
-export type NewBlogReqBody = {
-    id: string
-}
+export type NewBlogReqBody = Omit<BlogDetail, 'id' | 'createTime'>
 
 export type NewBlogRes = {
     id: string
 }
 
-export type UpdateBlogReqBody = {
-    id: string,
-    blogDetail: BlogDetail
-}
+export type UpdateBlogReqBody = Omit<BlogDetail, 'createTime' | 'author'>
 
 export type UpdateBlogRes = boolean
 
