@@ -4,3 +4,8 @@ export interface UserLoginReq {
 }
 
 export type UserLoginRes = boolean
+
+export interface SessionValue{
+    username: string,
+    password: string
+}

@@ -1,11 +1,10 @@
 import { URLSearchParams } from 'url';
 import http from 'http';
 
+import { SESSION_CACHE, handleUserRouter } from 'src/router/user';
 import { PostDatas } from 'src/interface/client';
 import { ReqExtended } from 'src/interface/server';
 import { handleBlogRouter } from 'src/router/blog';
-import { handleUserRouter } from 'src/router/user';
-
 
 
 const getPostData = async (req: http.IncomingMessage): Promise<PostDatas> => {
@@ -37,17 +36,33 @@ export const serverHandle: http.RequestListener = async (req, res) => {
     reqExtended.query = new URLSearchParams(req.url?.split('?')[1]);
     reqExtended.path = req.url?.split('?')[0];
     reqExtended.body = await getPostData(req);
+    reqExtended.cookie = {};
+    
+    const cookieStr = req.headers.cookie || '';
+    cookieStr.split(';').forEach((s) => {
+        const keyAndValue = s.trim();
+        const [key, value] = keyAndValue.split('=');
+        reqExtended.cookie![key] = value;
+    });
 
-    const blogData = await handleBlogRouter(req, res);
-    if (blogData) {
-        res.end(JSON.stringify(blogData));
-        return;
+    if (reqExtended.cookie?.userId && SESSION_CACHE[reqExtended.cookie.userId]) {
+        reqExtended.session = SESSION_CACHE[reqExtended.cookie.userId];
     }
 
-    const userData = handleUserRouter(req, res);
-    if (userData) {
-        res.end(JSON.stringify(userData));
-        return;
+    if (reqExtended.path?.startsWith('/api/blog')) {
+        const blogData = await handleBlogRouter(req, res);
+        if (blogData) {
+            res.end(JSON.stringify(blogData));
+            return;
+        }
+    }
+
+    if (reqExtended.path?.startsWith('/api/user')) {
+        const userData = await handleUserRouter(req, res);
+        if (userData) {
+            res.end(JSON.stringify(userData));
+            return;
+        }
     }
 
     res.writeHead(404, '404 Not Found', {

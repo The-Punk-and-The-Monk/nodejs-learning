@@ -30,8 +30,15 @@ export const handleBlogRouter = async (req: ReqExtended, res: ResExtended) => {
     /**
      * POST start
      */
+    if (!req.session) {
+        return new ErrorModel({
+            message: '请先登录'
+        });
+    }
     if (!req.body) {
-        return undefined;
+        return new ErrorModel({
+            message: 'post 无 body'
+        });
     }
 
     if (method === 'POST' && path === '/api/blog/new') {
