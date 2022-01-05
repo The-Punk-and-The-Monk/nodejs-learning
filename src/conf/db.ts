@@ -1,5 +1,6 @@
 import { ConnectionConfig } from "mysql";
 
+
 const env = process.env.NODE_ENV;
 
 export const MYSQL_CONF: ConnectionConfig = {
@@ -9,3 +10,5 @@ export const MYSQL_CONF: ConnectionConfig = {
     port: 3306,
     database: 'myblog',
 };
+
+export const REDIS_URL = 'localhost:6379';
